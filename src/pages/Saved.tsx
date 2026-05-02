@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { songs, videos } from "@/data/mock";
+import { useSongs, useVideos } from "@/hooks/useMedia";
 import { SongCard } from "@/components/cards/SongCard";
 import { VideoCard } from "@/components/cards/VideoCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -8,6 +8,8 @@ import { usePlayer } from "@/store/player";
 const Saved = () => {
   const { t } = useTranslation();
   const { savedSongs, savedVideos } = usePlayer();
+  const { songs } = useSongs();
+  const { videos } = useVideos();
   const ss = songs.filter((s) => savedSongs.includes(s.id));
   const sv = videos.filter((v) => savedVideos.includes(v.id));
   return (

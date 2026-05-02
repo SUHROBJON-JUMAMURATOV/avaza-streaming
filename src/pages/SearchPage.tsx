@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Search as SearchIcon } from "lucide-react";
-import { songs, videos } from "@/data/mock";
+import { useSongs, useVideos } from "@/hooks/useMedia";
 import { SongCard } from "@/components/cards/SongCard";
 import { VideoCard } from "@/components/cards/VideoCard";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -9,6 +9,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 const SearchPage = () => {
   const { t } = useTranslation();
   const [q, setQ] = useState("");
+  const { songs } = useSongs();
+  const { videos } = useVideos();
   const fSongs = useMemo(() => songs.filter((s) => (s.title + s.artist + s.genre).toLowerCase().includes(q.toLowerCase())), [q]);
   const fVideos = useMemo(() => videos.filter((v) => (v.title + v.artist).toLowerCase().includes(q.toLowerCase())), [q]);
   return (

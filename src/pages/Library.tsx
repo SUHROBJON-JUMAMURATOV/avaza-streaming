@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { songs, playlists } from "@/data/mock";
+import { playlists } from "@/data/mock";
+import { useSongs } from "@/hooks/useMedia";
 import { SongCard } from "@/components/cards/SongCard";
 import { PlaylistCard } from "@/components/cards/PlaylistCard";
 import { SectionHeader } from "@/components/SectionHeader";
@@ -8,6 +9,7 @@ import { usePlayer } from "@/store/player";
 const Library = () => {
   const { t } = useTranslation();
   const { liked } = usePlayer();
+  const { songs } = useSongs();
   const likedSongs = songs.filter((s) => liked.includes(s.id));
   return (
     <div className="space-y-10 animate-fade-in">
