@@ -1,9 +1,14 @@
 import { useTranslation } from "react-i18next";
-import { Bell, User, Globe } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Bell, User, Globe, LogOut, LogIn, Shield } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate, Link } from "react-router-dom";
 
 export const Topbar = () => {
   const { i18n } = useTranslation();
+  const { t } = useTranslation();
+  const { user, isAdmin, signOut } = useAuth();
+  const nav = useNavigate();
   const langs = [
     { code: "uz", label: "O‘zbek", flag: "🇺🇿" },
     { code: "ru", label: "Русский", flag: "🇷🇺" },
@@ -13,12 +18,12 @@ export const Topbar = () => {
 
   const change = (code: string) => {
     i18n.changeLanguage(code);
-    localStorage.setItem("avaza_lang", code);
+    localStorage.setItem("uzmusic_lang", code);
   };
 
   return (
     <header className="sticky top-0 z-30 glass-strong border-b border-border/40 px-6 py-3 flex items-center justify-between">
-      <div className="lg:hidden font-display font-bold text-xl gradient-text">AVAZA</div>
+      <Link to="/" className="lg:hidden font-display font-bold text-lg gradient-text">UZ-MUSIC.UZ</Link>
       <div className="flex-1" />
       <div className="flex items-center gap-2">
         <DropdownMenu>
@@ -35,12 +40,29 @@ export const Topbar = () => {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-        <button className="w-9 h-9 grid place-items-center rounded-lg hover:bg-secondary transition-smooth">
-          <Bell className="w-4 h-4" />
-        </button>
-        <button className="w-9 h-9 grid place-items-center rounded-full bg-gradient-primary text-primary-foreground hover:opacity-90 transition-smooth">
-          <User className="w-4 h-4" />
-        </button>
+        {user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="w-9 h-9 grid place-items-center rounded-full bg-gradient-primary text-primary-foreground hover:opacity-90 transition-smooth">
+              <User className="w-4 h-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="glass-strong min-w-[200px]">
+              <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">{user.email}</div>
+              <DropdownMenuSeparator />
+              {isAdmin && (
+                <DropdownMenuItem onClick={() => nav("/admin")} className="gap-2 cursor-pointer">
+                  <Shield className="w-4 h-4" /> {t("auth.admin_panel")}
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem onClick={async () => { await signOut(); nav("/"); }} className="gap-2 cursor-pointer">
+                <LogOut className="w-4 h-4" /> {t("auth.logout")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <button onClick={() => nav("/login")} className="px-4 py-2 rounded-lg bg-gradient-primary text-primary-foreground font-medium text-sm flex items-center gap-2 hover:opacity-90 transition-smooth shadow-glow">
+            <LogIn className="w-4 h-4" /> {t("auth.login")}
+          </button>
+        )}
       </div>
     </header>
   );

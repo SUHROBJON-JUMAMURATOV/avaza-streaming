@@ -33,7 +33,7 @@ export const Player = () => {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: current.title,
       artist: current.artist,
-      album: "AVAZA",
+      album: "UZ-MUSIC.UZ",
       artwork: [{ src: current.cover, sizes: "512x512", type: "image/jpeg" }],
     });
     navigator.mediaSession.setActionHandler("play", () => toggle());

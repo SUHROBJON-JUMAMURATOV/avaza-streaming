@@ -72,7 +72,7 @@ export const usePlayer = create<PlayerState>()(
       toggleSaveVideo: (id) => set((s) => ({ savedVideos: s.savedVideos.includes(id) ? s.savedVideos.filter((x) => x !== id) : [...s.savedVideos, id] })),
     }),
     {
-      name: "avaza-player",
+      name: "uzmusic-player",
       partialize: (s) => ({ liked: s.liked, savedSongs: s.savedSongs, savedVideos: s.savedVideos, volume: s.volume }),
     }
   )
