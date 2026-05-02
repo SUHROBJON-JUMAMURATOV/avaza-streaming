@@ -1,17 +1,20 @@
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { Play, Sparkles } from "lucide-react";
-import { songs, playlists, videos } from "@/data/mock";
+import { playlists } from "@/data/mock";
 import { SongCard } from "@/components/cards/SongCard";
 import { VideoCard } from "@/components/cards/VideoCard";
 import { PlaylistCard } from "@/components/cards/PlaylistCard";
 import { SectionHeader } from "@/components/SectionHeader";
 import { usePlayer } from "@/store/player";
+import { useSongs, useVideos } from "@/hooks/useMedia";
 import hero from "@/assets/hero.jpg";
 
 const Home = () => {
   const { t } = useTranslation();
   const { playSong } = usePlayer();
+  const { songs } = useSongs();
+  const { videos } = useVideos();
   return (
     <div className="space-y-10 animate-fade-in">
       {/* Hero */}
@@ -20,7 +23,7 @@ const Home = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/20" />
         <div className="relative p-8 lg:p-14 max-w-2xl">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass text-xs font-medium mb-4">
-            <Sparkles className="w-3 h-3 text-primary-glow" /> AVAZA Premium
+            <Sparkles className="w-3 h-3 text-primary-glow" /> UZ-MUSIC.UZ Premium
           </motion.div>
           <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="font-display text-4xl lg:text-6xl font-bold leading-tight tracking-tight">
             {t("home.hero_title")}
@@ -30,7 +33,7 @@ const Home = () => {
           </motion.p>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }} className="mt-6 flex gap-3">
             <button
-              onClick={() => playSong(songs[0], songs)}
+              onClick={() => songs[0] && playSong(songs[0], songs)}
               className="px-6 py-3 rounded-full bg-gradient-primary text-primary-foreground font-semibold flex items-center gap-2 shadow-glow hover:scale-105 transition-smooth"
             >
               <Play className="w-4 h-4" /> {t("home.play_now")}

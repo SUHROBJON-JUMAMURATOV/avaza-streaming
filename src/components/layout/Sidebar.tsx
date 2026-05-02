@@ -1,10 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { Home, Search, Library, Video, Heart, ListMusic, Sparkles } from "lucide-react";
+import { Home, Search, Library, Video, Heart, ListMusic, Sparkles, Shield } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
+import { useAuth } from "@/context/AuthContext";
 
 export const Sidebar = () => {
   const { t } = useTranslation();
+  const { isAdmin } = useAuth();
   const items = [
     { to: "/", icon: Home, label: t("nav.home") },
     { to: "/search", icon: Search, label: t("nav.search") },
@@ -12,6 +14,7 @@ export const Sidebar = () => {
     { to: "/videos", icon: Video, label: t("nav.videos") },
     { to: "/saved", icon: Heart, label: t("nav.saved") },
     { to: "/playlists", icon: ListMusic, label: t("nav.playlists") },
+    ...(isAdmin ? [{ to: "/admin", icon: Shield, label: t("nav.admin") }] : []),
   ];
   return (
     <aside className="hidden lg:flex flex-col w-64 shrink-0 h-screen sticky top-0 glass-strong border-r border-border/40 p-4 gap-2">
@@ -19,7 +22,7 @@ export const Sidebar = () => {
         <div className="w-9 h-9 rounded-xl bg-gradient-primary shadow-glow grid place-items-center">
           <Sparkles className="w-5 h-5 text-primary-foreground" />
         </div>
-        <span className="font-display font-bold text-2xl gradient-text tracking-tight">AVAZA</span>
+        <span className="font-display font-bold text-xl gradient-text tracking-tight">UZ-MUSIC.UZ</span>
       </NavLink>
       <nav className="flex flex-col gap-1 mt-2">
         {items.map((it, i) => (
