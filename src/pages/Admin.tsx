@@ -4,7 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Music, Video as VideoIcon, Upload, Trash2, Loader2 } from "lucide-react";
+import { Music, Video as VideoIcon, Upload, Trash2, Loader2, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
@@ -29,6 +29,10 @@ const Admin = () => {
   const [vFile, setVFile] = useState<File | null>(null);
   const [vThumb, setVThumb] = useState<File | null>(null);
   const [vUploading, setVUploading] = useState(false);
+
+  // Password change
+  const [newPass, setNewPass] = useState("");
+  const [pwLoading, setPwLoading] = useState(false);
 
   const loadAll = async () => {
     const [{ data: s }, { data: v }] = await Promise.all([
@@ -131,6 +135,7 @@ const Admin = () => {
         <TabsList className="glass">
           <TabsTrigger value="songs"><Music className="w-4 h-4 mr-2" />{t("admin.songs")}</TabsTrigger>
           <TabsTrigger value="videos"><VideoIcon className="w-4 h-4 mr-2" />{t("admin.videos")}</TabsTrigger>
+          <TabsTrigger value="account"><KeyRound className="w-4 h-4 mr-2" />Hisob</TabsTrigger>
         </TabsList>
 
         <TabsContent value="songs" className="mt-6 space-y-6">
@@ -209,6 +214,37 @@ const Admin = () => {
             ))}
             {videos.length === 0 && <p className="text-muted-foreground text-sm text-center py-8 col-span-2">Hali video yuklanmagan</p>}
           </div>
+        </TabsContent>
+
+        <TabsContent value="account" className="mt-6">
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (newPass.length < 6) { toast.error("Kamida 6 ta belgi"); return; }
+              setPwLoading(true);
+              const { error } = await supabase.auth.updateUser({ password: newPass });
+              setPwLoading(false);
+              if (error) toast.error(error.message);
+              else { toast.success("Parol o'zgartirildi"); setNewPass(""); }
+            }}
+            className="p-6 rounded-2xl bg-gradient-card border border-border/40 space-y-3 max-w-md"
+          >
+            <h2 className="font-semibold text-lg flex items-center gap-2"><KeyRound className="w-5 h-5" /> Parolni o'zgartirish</h2>
+            <p className="text-xs text-muted-foreground">Email: <span className="font-medium text-foreground">{user.email}</span></p>
+            <input
+              type="password"
+              value={newPass}
+              onChange={(e) => setNewPass(e.target.value)}
+              placeholder="Yangi parol (kamida 6 ta belgi)"
+              className={inputCls}
+              minLength={6}
+              maxLength={72}
+            />
+            <button disabled={pwLoading} className="px-6 py-2.5 rounded-lg bg-gradient-primary text-primary-foreground font-semibold shadow-glow disabled:opacity-50 flex items-center gap-2">
+              {pwLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+              Saqlash
+            </button>
+          </form>
         </TabsContent>
       </Tabs>
     </div>
