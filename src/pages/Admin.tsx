@@ -33,6 +33,8 @@ const Admin = () => {
   // Password change
   const [newPass, setNewPass] = useState("");
   const [pwLoading, setPwLoading] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [emLoading, setEmLoading] = useState(false);
 
   const loadAll = async () => {
     const [{ data: s }, { data: v }] = await Promise.all([
@@ -217,6 +219,7 @@ const Admin = () => {
         </TabsContent>
 
         <TabsContent value="account" className="mt-6">
+          <div className="space-y-4 max-w-md">
           <form
             onSubmit={async (e) => {
               e.preventDefault();
@@ -227,7 +230,7 @@ const Admin = () => {
               if (error) toast.error(error.message);
               else { toast.success("Parol o'zgartirildi"); setNewPass(""); }
             }}
-            className="p-6 rounded-2xl bg-gradient-card border border-border/40 space-y-3 max-w-md"
+            className="p-6 rounded-2xl bg-gradient-card border border-border/40 space-y-3"
           >
             <h2 className="font-semibold text-lg flex items-center gap-2"><KeyRound className="w-5 h-5" /> Parolni o'zgartirish</h2>
             <p className="text-xs text-muted-foreground">Email: <span className="font-medium text-foreground">{user.email}</span></p>
@@ -245,6 +248,33 @@ const Admin = () => {
               Saqlash
             </button>
           </form>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (!newEmail.includes("@")) { toast.error("To'g'ri email kiriting"); return; }
+              setEmLoading(true);
+              const { error } = await supabase.auth.updateUser({ email: newEmail });
+              setEmLoading(false);
+              if (error) toast.error(error.message);
+              else { toast.success("Email o'zgartirildi (yangi emailga tasdiqlash xati yuborildi)"); setNewEmail(""); }
+            }}
+            className="p-6 rounded-2xl bg-gradient-card border border-border/40 space-y-3"
+          >
+            <h2 className="font-semibold text-lg flex items-center gap-2"><KeyRound className="w-5 h-5" /> Login (email) o'zgartirish</h2>
+            <input
+              type="email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              placeholder="Yangi email"
+              className={inputCls}
+              maxLength={200}
+            />
+            <button disabled={emLoading} className="px-6 py-2.5 rounded-lg bg-gradient-primary text-primary-foreground font-semibold shadow-glow disabled:opacity-50 flex items-center gap-2">
+              {emLoading && <Loader2 className="w-4 h-4 animate-spin" />}
+              Saqlash
+            </button>
+          </form>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
