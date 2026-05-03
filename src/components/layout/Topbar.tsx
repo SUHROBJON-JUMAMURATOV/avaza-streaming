@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Bell, User, Globe, LogOut, LogIn, Shield } from "lucide-react";
+import { Bell, User, Globe, LogOut, LogIn } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useNavigate, Link } from "react-router-dom";
 export const Topbar = () => {
   const { i18n } = useTranslation();
   const { t } = useTranslation();
-  const { user, isAdmin, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const nav = useNavigate();
   const langs = [
     { code: "uz", label: "O‘zbek", flag: "🇺🇿" },
@@ -48,11 +48,6 @@ export const Topbar = () => {
             <DropdownMenuContent align="end" className="glass-strong min-w-[200px]">
               <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">{user.email}</div>
               <DropdownMenuSeparator />
-              {isAdmin && (
-                <DropdownMenuItem onClick={() => nav("/admin")} className="gap-2 cursor-pointer">
-                  <Shield className="w-4 h-4" /> {t("auth.admin_panel")}
-                </DropdownMenuItem>
-              )}
               <DropdownMenuItem onClick={async () => { await signOut(); nav("/"); }} className="gap-2 cursor-pointer">
                 <LogOut className="w-4 h-4" /> {t("auth.logout")}
               </DropdownMenuItem>
