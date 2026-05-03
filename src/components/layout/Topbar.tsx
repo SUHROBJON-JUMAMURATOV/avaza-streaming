@@ -40,7 +40,7 @@ export const Topbar = () => {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-        {user ? (
+        {user && (
           <DropdownMenu>
             <DropdownMenuTrigger className="w-9 h-9 grid place-items-center rounded-full bg-gradient-primary text-primary-foreground hover:opacity-90 transition-smooth">
               <User className="w-4 h-4" />
@@ -53,10 +53,6 @@ export const Topbar = () => {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : (
-          <button onClick={() => nav("/login")} className="px-4 py-2 rounded-lg bg-gradient-primary text-primary-foreground font-medium text-sm flex items-center gap-2 hover:opacity-90 transition-smooth shadow-glow">
-            <LogIn className="w-4 h-4" /> {t("auth.login")}
-          </button>
         )}
       </div>
     </header>
